@@ -98,6 +98,14 @@ export function GranolaIcon({ className }: IconProps) {
   )
 }
 
+export function OmlxIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={cn("size-5", className)}>
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 2c4.41 0 8 3.59 8 8s-3.59 8-8 8-8-3.59-8-8 3.59-8 8-8zm-1 4v4H7l5 6 5-6h-4V8h-2z" />
+    </svg>
+  )
+}
+
 export function GenericApiIcon({ className }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={cn("size-5", className)}>
