@@ -10,7 +10,9 @@
         "start": "electron .",
         "build": "rm -rf dist && tsc && node bundle.mjs",
         "package": "electron-forge package",
-        "make": "electron-forge make"
+        "make": "electron-forge make",
+        "package:darwin:unsigned": "ROWBOAT_UNSIGNED_MACOS=1 electron-forge package --platform=darwin",
+        "make:darwin:unsigned": "ROWBOAT_UNSIGNED_MACOS=1 electron-forge make --platform=darwin"
     },
     "dependencies": {
         "@x/core": "workspace:*",

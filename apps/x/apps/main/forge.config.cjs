@@ -4,6 +4,9 @@
 
 const path = require('path');
 const pkg = require('./package.json');
+const shouldSkipMacSigning = ['1', 'true', 'yes'].includes(
+    String(process.env.ROWBOAT_UNSIGNED_MACOS || '').toLowerCase()
+);
 
 module.exports = {
     packagerConfig: {
@@ -17,14 +20,14 @@ module.exports = {
         extendInfo: {
             NSAudioCaptureUsageDescription: 'Rowboat needs access to system audio to transcribe meetings from other apps (Zoom, Meet, etc.)',
         },
-        osxSign: {
+        osxSign: shouldSkipMacSigning ? undefined : {
             batchCodesignCalls: true,
             optionsForFile: () => ({
                 entitlements: path.join(__dirname, 'entitlements.plist'),
                 'entitlements-inherit': path.join(__dirname, 'entitlements.plist'),
             }),
         },
-        osxNotarize: {
+        osxNotarize: shouldSkipMacSigning ? undefined : {
             appleId: process.env.APPLE_ID,
             appleIdPassword: process.env.APPLE_PASSWORD,
             teamId: process.env.APPLE_TEAM_ID

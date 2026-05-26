@@ -12,6 +12,7 @@ cd apps/x && npm run dev           # Development mode (builds deps, runs app)
 cd apps/x && npm run lint          # Lint check
 cd apps/x/apps/main && npm run package   # Production build (.app)
 cd apps/x/apps/main && npm run make      # Create DMG distributable
+cd apps/x/apps/main && npm run make:darwin:unsigned  # Create unsigned macOS build artifacts
 ```
 
 ## Monorepo Structure
