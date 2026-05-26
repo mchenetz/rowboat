@@ -18,6 +18,7 @@ import {
   OpenRouterIcon,
   VercelIcon,
   GenericApiIcon,
+  OmlxIcon,
 } from "../provider-icons"
 import type { OnboardingState, LlmProviderFlavor } from "../use-onboarding-state"
 
@@ -36,6 +37,7 @@ const moreProviders: Array<{ id: LlmProviderFlavor; name: string; description: s
   { id: "openrouter", name: "OpenRouter", description: "Multiple models, one key", color: "bg-pink-500/10 text-pink-600 dark:text-pink-400", icon: <OpenRouterIcon /> },
   { id: "aigateway", name: "AI Gateway", description: "Vercel AI Gateway", color: "bg-sky-500/10 text-sky-600 dark:text-sky-400", icon: <VercelIcon /> },
   { id: "openai-compatible", name: "OpenAI-Compatible", description: "Custom endpoint", color: "bg-gray-500/10 text-gray-600 dark:text-gray-400", icon: <GenericApiIcon /> },
+  { id: "omlx", name: "oMLX", description: "Local MLX models", color: "bg-teal-500/10 text-teal-600 dark:text-teal-400", icon: <OmlxIcon /> },
 ]
 
 export function LlmSetupStep({ state }: LlmSetupStepProps) {
@@ -321,7 +323,9 @@ export function LlmSetupStep({ state }: LlmSetupStepProps) {
                   ? "http://localhost:11434"
                   : llmProvider === "openai-compatible"
                     ? "http://localhost:1234/v1"
-                    : "https://ai-gateway.vercel.sh/v1"
+                    : llmProvider === "omlx"
+                      ? "http://127.0.0.1:8000/v1"
+                      : "https://ai-gateway.vercel.sh/v1"
               }
               className="font-mono"
             />

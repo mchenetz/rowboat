@@ -162,7 +162,7 @@ function AppearanceSettings() {
 
 // --- Model Settings UI ---
 
-type LlmProviderFlavor = "openai" | "anthropic" | "google" | "openrouter" | "aigateway" | "ollama" | "openai-compatible"
+type LlmProviderFlavor = "openai" | "anthropic" | "google" | "openrouter" | "aigateway" | "ollama" | "openai-compatible" | "omlx"
 
 interface LlmModelOption {
   id: string
@@ -181,6 +181,7 @@ const moreProviders: Array<{ id: LlmProviderFlavor; name: string; description: s
   { id: "openrouter", name: "OpenRouter", description: "Multiple models, one key" },
   { id: "aigateway", name: "AI Gateway (Vercel)", description: "Vercel's AI Gateway" },
   { id: "openai-compatible", name: "OpenAI-Compatible", description: "Custom OpenAI-compatible API" },
+  { id: "omlx", name: "oMLX", description: "Local MLX models" },
 ]
 
 const preferredDefaults: Partial<Record<LlmProviderFlavor, string>> = {
@@ -191,6 +192,7 @@ const preferredDefaults: Partial<Record<LlmProviderFlavor, string>> = {
 const defaultBaseURLs: Partial<Record<LlmProviderFlavor, string>> = {
   ollama: "http://localhost:11434",
   "openai-compatible": "http://localhost:1234/v1",
+  omlx: "http://127.0.0.1:8000/v1",
 }
 
 function ModelSettings({ dialogOpen }: { dialogOpen: boolean }) {
@@ -204,6 +206,7 @@ function ModelSettings({ dialogOpen }: { dialogOpen: boolean }) {
     aigateway: { apiKey: "", baseURL: "", models: [""], knowledgeGraphModel: "", meetingNotesModel: "", liveNoteAgentModel: "" },
     ollama: { apiKey: "", baseURL: "http://localhost:11434", models: [""], knowledgeGraphModel: "", meetingNotesModel: "", liveNoteAgentModel: "" },
     "openai-compatible": { apiKey: "", baseURL: "http://localhost:1234/v1", models: [""], knowledgeGraphModel: "", meetingNotesModel: "", liveNoteAgentModel: "" },
+    omlx: { apiKey: "", baseURL: "http://127.0.0.1:8000/v1", models: [""], knowledgeGraphModel: "", meetingNotesModel: "", liveNoteAgentModel: "" },
   })
   const [modelsCatalog, setModelsCatalog] = useState<Record<string, LlmModelOption[]>>({})
   const [modelsLoading, setModelsLoading] = useState(false)
@@ -213,11 +216,11 @@ function ModelSettings({ dialogOpen }: { dialogOpen: boolean }) {
   const [showMoreProviders, setShowMoreProviders] = useState(false)
 
   const activeConfig = providerConfigs[provider]
-  const showApiKey = provider === "openai" || provider === "anthropic" || provider === "google" || provider === "openrouter" || provider === "aigateway" || provider === "openai-compatible"
+  const showApiKey = provider === "openai" || provider === "anthropic" || provider === "google" || provider === "openrouter" || provider === "aigateway" || provider === "openai-compatible" || provider === "omlx"
   const requiresApiKey = provider === "openai" || provider === "anthropic" || provider === "google" || provider === "openrouter" || provider === "aigateway"
-  const showBaseURL = provider === "ollama" || provider === "openai-compatible" || provider === "aigateway"
-  const requiresBaseURL = provider === "ollama" || provider === "openai-compatible"
-  const isLocalProvider = provider === "ollama" || provider === "openai-compatible"
+  const showBaseURL = provider === "ollama" || provider === "openai-compatible" || provider === "aigateway" || provider === "omlx"
+  const requiresBaseURL = provider === "ollama" || provider === "openai-compatible" || provider === "omlx"
+  const isLocalProvider = provider === "ollama" || provider === "openai-compatible" || provider === "omlx"
   const modelsForProvider = modelsCatalog[provider] || []
   const showModelInput = isLocalProvider || modelsForProvider.length === 0
   const isMoreProvider = moreProviders.some(p => p.id === provider)
@@ -733,7 +736,7 @@ function ModelSettings({ dialogOpen }: { dialogOpen: boolean }) {
       {showApiKey && (
         <div className="space-y-2">
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-            {provider === "openai-compatible" ? "API Key (optional)" : "API Key"}
+            {provider === "openai-compatible" || provider === "omlx" ? "API Key (optional)" : "API Key"}
           </span>
           <Input
             type="password"
@@ -756,7 +759,9 @@ function ModelSettings({ dialogOpen }: { dialogOpen: boolean }) {
                 ? "http://localhost:11434"
                 : provider === "openai-compatible"
                   ? "http://localhost:1234/v1"
-                  : "https://ai-gateway.vercel.sh/v1"
+                  : provider === "omlx"
+                    ? "http://127.0.0.1:8000/v1"
+                    : "https://ai-gateway.vercel.sh/v1"
             }
           />
         </div>

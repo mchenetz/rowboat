@@ -58,6 +58,13 @@ export function createProvider(config: z.infer<typeof Provider>): ProviderV2 {
                 baseURL: baseURL || "",
                 headers,
             });
+        case "omlx":
+            return createOpenAICompatible({
+                name: "omlx",
+                apiKey,
+                baseURL: baseURL || "http://127.0.0.1:8000/v1",
+                headers,
+            });
         case "openrouter":
             return createOpenRouter({
                 apiKey,
@@ -76,7 +83,7 @@ export async function testModelConnection(
     model: string,
     timeoutMs?: number,
 ): Promise<{ success: boolean; error?: string }> {
-    const isLocal = providerConfig.flavor === "ollama" || providerConfig.flavor === "openai-compatible";
+    const isLocal = providerConfig.flavor === "ollama" || providerConfig.flavor === "openai-compatible" || providerConfig.flavor === "omlx";
     const effectiveTimeout = timeoutMs ?? (isLocal ? 60000 : 8000);
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), effectiveTimeout);

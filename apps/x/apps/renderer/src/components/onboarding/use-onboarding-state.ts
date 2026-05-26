@@ -12,7 +12,7 @@ export type Step = 0 | 1 | 2 | 3
 
 export type OnboardingPath = 'rowboat' | 'byok' | null
 
-export type LlmProviderFlavor = "openai" | "anthropic" | "google" | "openrouter" | "aigateway" | "ollama" | "openai-compatible"
+export type LlmProviderFlavor = "openai" | "anthropic" | "google" | "openrouter" | "aigateway" | "ollama" | "openai-compatible" | "omlx"
 
 export interface LlmModelOption {
   id: string
@@ -37,6 +37,7 @@ export function useOnboardingState(open: boolean, onComplete: () => void) {
     aigateway: { apiKey: "", baseURL: "", model: "", knowledgeGraphModel: "", meetingNotesModel: "", liveNoteAgentModel: "" },
     ollama: { apiKey: "", baseURL: "http://localhost:11434", model: "", knowledgeGraphModel: "", meetingNotesModel: "", liveNoteAgentModel: "" },
     "openai-compatible": { apiKey: "", baseURL: "http://localhost:1234/v1", model: "", knowledgeGraphModel: "", meetingNotesModel: "", liveNoteAgentModel: "" },
+    omlx: { apiKey: "", baseURL: "http://127.0.0.1:8000/v1", model: "", knowledgeGraphModel: "", meetingNotesModel: "", liveNoteAgentModel: "" },
   })
   const [testState, setTestState] = useState<{ status: "idle" | "testing" | "success" | "error"; error?: string }>({
     status: "idle",
@@ -92,11 +93,11 @@ export function useOnboardingState(open: boolean, onComplete: () => void) {
   )
 
   const activeConfig = providerConfigs[llmProvider]
-  const showApiKey = llmProvider === "openai" || llmProvider === "anthropic" || llmProvider === "google" || llmProvider === "openrouter" || llmProvider === "aigateway" || llmProvider === "openai-compatible"
+  const showApiKey = llmProvider === "openai" || llmProvider === "anthropic" || llmProvider === "google" || llmProvider === "openrouter" || llmProvider === "aigateway" || llmProvider === "openai-compatible" || llmProvider === "omlx"
   const requiresApiKey = llmProvider === "openai" || llmProvider === "anthropic" || llmProvider === "google" || llmProvider === "openrouter" || llmProvider === "aigateway"
-  const requiresBaseURL = llmProvider === "ollama" || llmProvider === "openai-compatible"
-  const showBaseURL = llmProvider === "ollama" || llmProvider === "openai-compatible" || llmProvider === "aigateway"
-  const isLocalProvider = llmProvider === "ollama" || llmProvider === "openai-compatible"
+  const requiresBaseURL = llmProvider === "ollama" || llmProvider === "openai-compatible" || llmProvider === "omlx"
+  const showBaseURL = llmProvider === "ollama" || llmProvider === "openai-compatible" || llmProvider === "aigateway" || llmProvider === "omlx"
+  const isLocalProvider = llmProvider === "ollama" || llmProvider === "openai-compatible" || llmProvider === "omlx"
   const canTest =
     activeConfig.model.trim().length > 0 &&
     (!requiresApiKey || activeConfig.apiKey.trim().length > 0) &&
