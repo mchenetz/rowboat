@@ -90,10 +90,15 @@ module.exports = {
         {
             name: '@electron-forge/publisher-github',
             config: {
-                repository: {
-                    owner: 'rowboatlabs',
-                    name: 'rowboat'
-                },
+                repository: (() => {
+                    const repo = process.env.GITHUB_REPOSITORY || 'rowboatlabs/rowboat';
+                    const parts = repo.split('/');
+                    if (parts.length !== 2 || !parts[0] || !parts[1]) {
+                        throw new Error(`Invalid GITHUB_REPOSITORY format: "${repo}". Expected "owner/name".`);
+                    }
+                    const [owner, name] = parts;
+                    return { owner, name };
+                })(),
                 prerelease: true
             }
         }
